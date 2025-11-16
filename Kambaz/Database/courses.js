@@ -1,0 +1,90 @@
+export default [
+  {
+    "_id": "CS1234",
+    "name": "React JS",
+    "number": "CS1234",
+    "startDate": "2023-01-10",
+    "endDate": "2023-05-15",
+    "department": "Computer Science",
+    "credits": 4,
+    "description": "Full Stack software developer",
+    "image": "/images/react.png"
+  },
+  {
+    "_id": "CS5678",
+    "name": "Java",
+    "number": "CS5678",
+    "startDate": "2023-01-10",
+    "endDate": "2023-05-15",
+    "department": "Computer Science",
+    "credits": 3,
+    "description": "Core Java Programming",
+    "image": "/images/java.png"
+  },
+  {
+    "_id": "CS9101",
+    "name": "Python",
+    "number": "CS9101",
+    "startDate": "2023-01-10",
+    "endDate": "2023-05-15",
+    "department": "Computer Science",
+    "credits": 3,
+    "description": "Python for Beginners",
+    "image": "/images/python.png"
+  },
+  {
+    "_id": "CS1121",
+    "name": "JavaScript",
+    "number": "CS1121",
+    "startDate": "2023-01-10",
+    "endDate": "2023-05-15",
+    "department": "Computer Science",
+    "credits": 3,
+    "description": "Modern JavaScript Essentials",
+    "image": "/images/javascript.png"
+  },
+  {
+    "_id": "CS3141",
+    "name": "HTML & CSS",
+    "number": "CS3141",
+    "startDate": "2023-01-10",
+    "endDate": "2023-05-15",
+    "department": "Computer Science",
+    "credits": 2,
+    "description": "Web Design Fundamentals",
+    "image": "/images/html css.jpeg"
+  },
+  {
+    "_id": "CS4151",
+    "name": "MongoDB",
+    "number": "CS4151",
+    "startDate": "2023-01-10",
+    "endDate": "2023-05-15",
+    "department": "Computer Science",
+    "credits": 3,
+    "description": "NoSQL Database Essentials",
+    "image": "/images/mongodb.png"
+  },
+  {
+    "_id": "CS5161",
+    "name": "SQL",
+    "number": "CS5161",
+    "startDate": "2023-01-10",
+    "endDate": "2023-05-15",
+    "department": "Computer Science",
+    "credits": 3,
+    "description": "Relational Database Management",
+    "image": "/images/sql.jpeg"
+  },
+  {
+    "_id": "CS6171",
+    "name": "Node.js",
+    "number": "CS6171",
+    "startDate": "2023-01-10",
+    "endDate": "2023-05-15",
+    "department": "Computer Science",
+    "credits": 4,
+    "description": "Backend Development with Node.js",
+    "image": "/images/node.png"
+  }
+]
