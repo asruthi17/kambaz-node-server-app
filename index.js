@@ -1,5 +1,6 @@
 import "dotenv/config";
 import express from 'express';
+import mongoose from "mongoose";
 import session from "express-session";
 import Hello from "./Hello.js";
 import Lab5 from "./Lab5/index.js";
@@ -10,6 +11,15 @@ import AssignmentsRoutes from "./Kambaz/Assignments/routes.js";
 import EnrollmentsRoutes from "./Kambaz/Enrollments/routes.js";
 import db from "./Kambaz/Database/index.js";
 import cors from "cors";
+
+const CONNECTION_STRING = process.env.SERVER_ENV === "production" 
+  ? process.env.ATLAS_CONNECTION_STRING 
+  : process.env.DATABASE_CONNECTION_STRING || "mongodb://127.0.0.1:27017/kambaz";
+
+console.log("Server environment:", process.env.SERVER_ENV || "development");
+console.log("Connecting to:", CONNECTION_STRING.includes("mongodb+srv") ? "MongoDB Atlas (Cloud)" : "Local MongoDB");
+
+mongoose.connect(CONNECTION_STRING);
 
 const app = express();
 
@@ -38,12 +48,15 @@ if (process.env.SERVER_ENV !== "development") {
 app.use(session(sessionOptions));
 app.use(express.json());
 
-UserRoutes(app, db);
-CourseRoutes(app, db);
-ModulesRoutes(app, db);
-AssignmentsRoutes(app, db);
-EnrollmentsRoutes(app, db);
+UserRoutes(app);
+CourseRoutes(app);
+ModulesRoutes(app);
+AssignmentsRoutes(app);
+EnrollmentsRoutes(app);
 Lab5(app);
 Hello(app);
 
-app.listen(process.env.PORT || 4000);
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
