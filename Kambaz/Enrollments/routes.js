@@ -1,7 +1,7 @@
 import * as dao from "./dao.js";
 
 export default function EnrollmentsRoutes(app) {
-
+  
   const enrollUserInCourse = async (req, res) => {
     let { userId, courseId } = req.params;
     if (userId === "current") {

@@ -12,9 +12,8 @@ import EnrollmentsRoutes from "./Kambaz/Enrollments/routes.js";
 import db from "./Kambaz/Database/index.js";
 import cors from "cors";
 
-const CONNECTION_STRING = process.env.SERVER_ENV === "production" 
-  ? process.env.ATLAS_CONNECTION_STRING 
-  : process.env.DATABASE_CONNECTION_STRING || "mongodb://127.0.0.1:27017/kambaz";
+// Simple connection string - just use DATABASE_CONNECTION_STRING
+const CONNECTION_STRING = process.env.DATABASE_CONNECTION_STRING || "mongodb://127.0.0.1:27017/kambaz";
 
 console.log("Server environment:", process.env.SERVER_ENV || "development");
 console.log("Connecting to:", CONNECTION_STRING.includes("mongodb+srv") ? "MongoDB Atlas (Cloud)" : "Local MongoDB");

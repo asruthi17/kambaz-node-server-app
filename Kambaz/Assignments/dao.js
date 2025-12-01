@@ -1,4 +1,5 @@
 import model from "./model.js";
+import { v4 as uuidv4 } from "uuid";
 
 export function findAssignmentsForCourse(courseId) {
   return model.find({ course: courseId });
@@ -6,7 +7,8 @@ export function findAssignmentsForCourse(courseId) {
 
 export function createAssignment(assignment) {
   delete assignment._id;
-  return model.create(assignment);
+  const newAssignment = { ...assignment, _id: uuidv4() };
+  return model.create(newAssignment);
 }
 
 export function deleteAssignment(assignmentId) {
@@ -15,4 +17,8 @@ export function deleteAssignment(assignmentId) {
 
 export function updateAssignment(assignmentId, assignmentUpdates) {
   return model.updateOne({ _id: assignmentId }, { $set: assignmentUpdates });
+}
+
+export function findAssignmentById(assignmentId) {
+  return model.findById(assignmentId);
 }
