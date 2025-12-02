@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import enrollmentsModel from "../Enrollments/model.js";
 
 export function findAllCourses() {
-  return model.find({}, { name: 1, description: 1, number: 1, _id: 1 });
+  return model.find({}, { name: 1, description: 1, number: 1, _id: 1, image: 1 });   
 }
 
 export async function findCoursesForEnrolledUser(userId) {
@@ -11,7 +11,7 @@ export async function findCoursesForEnrolledUser(userId) {
   const courseIds = enrollments.map((enrollment) => enrollment.course);
   const courses = await model.find(
     { _id: { $in: courseIds } },
-    { name: 1, description: 1, number: 1, _id: 1 }
+    { name: 1, description: 1, number: 1, _id: 1, image: 1 }  
   );
   return courses;
 }
