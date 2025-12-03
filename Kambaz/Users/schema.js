@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
-    // Remove the _id definition - let MongoDB handle it automatically
+    _id: String,  // ADD THIS LINE - Allow string IDs
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     firstName: String,
@@ -20,8 +20,8 @@ const userSchema = new mongoose.Schema(
     totalActivity: String,
   },
   { 
-    collection: "users"
-    // Let MongoDB handle _id automatically
+    collection: "users",
+    _id: false 
   }
 );
 
