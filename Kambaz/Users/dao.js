@@ -2,7 +2,6 @@ import model from "./model.js";
 
 export async function createUser(user) {
   try {
-    delete user._id; 
     const newUser = await model.create(user);
     return {
       ...newUser.toObject(),
