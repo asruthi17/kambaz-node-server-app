@@ -1,68 +1,117 @@
 import model from "./model.js";
 
-export function createUser(user) {
-  delete user._id;  // Let MongoDB create it
-  return model.create(user);
+export async function createUser(user) {
+  try {
+    delete user._id; 
+    const newUser = await model.create(user);
+    return {
+      ...newUser.toObject(),
+      _id: newUser._id.toString()
+    };
+  } catch (error) {
+    console.error("DAO Error - createUser:", error);
+    throw new Error(`Failed to create user: ${error.message}`);
+  }
 }
 
 export async function findAllUsers() {
-  const users = await model.find().lean();
-  return users.map(user => ({
-    ...user,
-    _id: user._id.toString()  // Convert to string for consistency
-  }));
+  try {
+    const users = await model.find().lean();
+    return users.map(user => ({
+      ...user,
+      _id: user._id.toString()
+    }));
+  } catch (error) {
+    console.error("DAO Error - findAllUsers:", error);
+    throw new Error(`Failed to fetch users: ${error.message}`);
+  }
 }
 
 export async function findUserById(userId) {
-  const user = await model.findById(userId).lean();
-  if (!user) return null;
-  return {
-    ...user,
-    _id: user._id.toString()
-  };
+  try {
+    const user = await model.findById(userId).lean();
+    if (!user) return null;
+    return {
+      ...user,
+      _id: user._id.toString()
+    };
+  } catch (error) {
+    console.error("DAO Error - findUserById:", error);
+    throw new Error(`Failed to find user: ${error.message}`);
+  }
 }
 
 export async function findUserByUsername(username) {
-  const user = await model.findOne({ username: username }).lean();
-  if (!user) return null;
-  return {
-    ...user,
-    _id: user._id.toString()
-  };
+  try {
+    const user = await model.findOne({ username: username }).lean();
+    if (!user) return null;
+    return {
+      ...user,
+      _id: user._id.toString()
+    };
+  } catch (error) {
+    console.error("DAO Error - findUserByUsername:", error);
+    throw new Error(`Failed to find user by username: ${error.message}`);
+  }
 }
 
 export async function findUserByCredentials(username, password) {
-  const user = await model.findOne({ username, password }).lean();
-  if (!user) return null;
-  return {
-    ...user,
-    _id: user._id.toString()
-  };
+  try {
+    const user = await model.findOne({ username, password }).lean();
+    if (!user) return null;
+    return {
+      ...user,
+      _id: user._id.toString()
+    };
+  } catch (error) {
+    console.error("DAO Error - findUserByCredentials:", error);
+    throw new Error(`Failed to verify credentials: ${error.message}`);
+  }
 }
 
-export function updateUser(userId, user) {
-  return model.updateOne({ _id: userId }, { $set: user });
+export async function updateUser(userId, user) {
+  try {
+    return await model.updateOne({ _id: userId }, { $set: user });
+  } catch (error) {
+    console.error("DAO Error - updateUser:", error);
+    throw new Error(`Failed to update user: ${error.message}`);
+  }
 }
 
-export function deleteUser(userId) {
-  return model.findByIdAndDelete(userId);
+export async function deleteUser(userId) {
+  try {
+    return await model.findByIdAndDelete(userId);
+  } catch (error) {
+    console.error("DAO Error - deleteUser:", error);
+    throw new Error(`Failed to delete user: ${error.message}`);
+  }
 }
 
 export async function findUsersByRole(role) {
-  const users = await model.find({ role: role }).lean();
-  return users.map(user => ({
-    ...user,
-    _id: user._id.toString()
-  }));
+  try {
+    const users = await model.find({ role: role }).lean();
+    return users.map(user => ({
+      ...user,
+      _id: user._id.toString()
+    }));
+  } catch (error) {
+    console.error("DAO Error - findUsersByRole:", error);
+    throw new Error(`Failed to find users by role: ${error.message}`);
+  }
 }
 
 export async function findUsersByPartialName(partialName) {
-  const regex = new RegExp(partialName, "i");
-  const users = await model.find({
-    $or: [{ firstName: { $regex: regex } }, { lastName: { $regex: regex } }],
-  }).lean();
-  return users.map(user => ({
-    ...user,
-    _id: user._id.toString()
-  }));
+  try {
+    const regex = new RegExp(partialName, "i");
+    const users = await model.find({
+      $or: [{ firstName: { $regex: regex } }, { lastName: { $regex: regex } }],
+    }).lean();
+    return users.map(user => ({
+      ...user,
+      _id: user._id.toString()
+    }));
+  } catch (error) {
+    console.error("DAO Error - findUsersByPartialName:", error);
+    throw new Error(`Failed to find users by name: ${error.message}`);
+  }
 }
