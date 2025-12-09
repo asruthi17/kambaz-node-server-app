@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-  // ❌ REMOVE THIS LINE: _id: { type: String, required: true },
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   firstName: { type: String, required: true },
@@ -19,7 +18,6 @@ const userSchema = new mongoose.Schema({
   totalActivity: String
 }, { 
   collection: "users"
-  // ❌ REMOVE THIS: _id: false
 });
 
 export default userSchema;
