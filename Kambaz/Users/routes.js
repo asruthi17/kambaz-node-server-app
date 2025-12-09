@@ -1,58 +1,131 @@
-import UsersDao from "./dao.js";
+import * as dao from "./dao.js";
 
-export default function UserRoutes(app, db) {
-  const dao = UsersDao(db);
+export default function UserRoutes(app) {
   
-  const createUser = (req, res) => {
-    const user = dao.createUser(req.body);
-    res.json(user);
-  };
-  
-  const deleteUser = (req, res) => {
-    const { userId } = req.params;
-    dao.deleteUser(userId);
-    res.sendStatus(204);
-  };
-  
-  const findAllUsers = (req, res) => {
-    const users = dao.findAllUsers();
-    res.json(users);
-  };
-  
-  const findUserById = (req, res) => {
-    const { userId } = req.params;
-    const user = dao.findUserById(userId);
-    res.json(user);
-  };
-  
-  const updateUser = (req, res) => {
-    const { userId } = req.params;
-    const userUpdates = req.body;
-    dao.updateUser(userId, userUpdates);
-    const currentUser = dao.findUserById(userId);
-    req.session["currentUser"] = currentUser;
-    res.json(currentUser);
-  };
-  
-  const signup = (req, res) => {
-    const user = dao.findUserByUsername(req.body.username);
-    if (user) {
-      res.status(400).json({ message: "Username already in use" });
-      return;
+
+  const createUser = async (req, res) => {
+    try {
+      const user = await dao.createUser(req.body);
+      res.json(user);
+    } catch (error) {
+      console.error("Error creating user:", error);
+      res.status(500).json({ 
+        message: "Failed to create user",
+        error: error.message 
+      });
     }
-    const currentUser = dao.createUser(req.body);
-    req.session["currentUser"] = currentUser;
-    res.json(currentUser);
   };
   
-  const signin = (req, res) => {
-    const { username, password } = req.body;
-    const currentUser = dao.findUserByCredentials(username, password);
-    if (currentUser) {
+  const deleteUser = async (req, res) => {
+    try {
+      const status = await dao.deleteUser(req.params.userId);
+      res.json(status);
+    } catch (error) {
+      console.error(" Error deleting user:", error);
+      res.status(500).json({ 
+        message: "Failed to delete user",
+        error: error.message 
+      });
+    }
+  };
+
+  const findAllUsers = async (req, res) => {
+    try {
+      const { role, name } = req.query;
+      
+      if (role) {
+        const users = await dao.findUsersByRole(role);
+        res.json(users);
+        return;
+      }
+      
+      if (name) {
+        const users = await dao.findUsersByPartialName(name);
+        res.json(users);
+        return;
+      }
+      
+      const users = await dao.findAllUsers();
+      res.json(users);
+    } catch (error) {
+      console.error(" Error finding users:", error);
+      res.status(500).json({ 
+        message: "Failed to fetch users",
+        error: error.message 
+      });
+    }
+  };
+  
+  const findUserById = async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const user = await dao.findUserById(userId);
+      if (!user) {
+        res.status(404).json({ message: "User not found" });
+        return;
+      }
+      res.json(user);
+    } catch (error) {
+      console.error(" Error finding user:", error);
+      res.status(500).json({ 
+        message: "Failed to fetch user",
+        error: error.message 
+      });
+    }
+  };
+  
+  const updateUser = async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const userUpdates = req.body;
+      await dao.updateUser(userId, userUpdates);
+      const currentUser = await dao.findUserById(userId);
       req.session["currentUser"] = currentUser;
       res.json(currentUser);
-    } else {
-      res.status(401).json({ message: "Unable to login. Try again later." });
+    } catch (error) {
+      console.error(" Error updating user:", error);
+      res.status(500).json({ 
+        message: "Failed to update user",
+        error: error.message 
+      });
+    }
+  };
+  
+  const signup = async (req, res) => {
+    try {
+      const user = await dao.findUserByUsername(req.body.username);
+      if (user) {
+        res.status(400).json({ message: "Username already in use" });
+        return;
+      }
+      const currentUser = await dao.createUser(req.body);
+      req.session["currentUser"] = currentUser;
+      res.json(currentUser);
+    } catch (error) {
+      console.error(" Error signing up:", error);
+      res.status(500).json({ 
+        message: "Failed to sign up",
+        error: error.message 
+      });
+    }
+  };
+  
+  const signin = async (req, res) => {
+    try {
+      const { username, password } = req.body;
+      const currentUser = await dao.findUserByCredentials(username, password);
+      if (currentUser) {
+        req.session["currentUser"] = currentUser;
+        res.json(currentUser);
+      } else {
+        res.status(401).json({ message: "Unable to login. Try again later." });
+      }
+    } catch (error) {
+      console.error("Error signing in:", error);
+      res.status(500).json({ 
+        message: "Failed to sign in",
+        error: error.message 
+      });
     }
   };
   

@@ -1,40 +1,36 @@
-import { v4 as uuidv4 } from "uuid";
+import model from "./model.js";
 
-export default function EnrollmentsDao(db) {
-  function enrollUserInCourse(userId, courseId) {
-    const { enrollments } = db;
-    const existingEnrollment = enrollments.find(
-      (e) => e.user === userId && e.course === courseId
-    );
-    if (!existingEnrollment) {
-      enrollments.push({ _id: uuidv4(), user: userId, course: courseId });
-    }
-  }
+export async function findCoursesForUser(userId) {
+  const enrollments = await model.find({ user: userId }).populate("course");
+  return enrollments.map((enrollment) => enrollment.course);
+}
 
-  function unenrollUserFromCourse(userId, courseId) {
-    const { enrollments } = db;
-    db.enrollments = enrollments.filter(
-      (e) => !(e.user === userId && e.course === courseId)
-    );
-  }
+export async function findUsersForCourse(courseId) {
+  const enrollments = await model.find({ course: courseId });
+  console.log("Enrollments found:", enrollments);
+  
+  const userIds = enrollments.map((e) => e.user);
+  console.log("User IDs:", userIds);
+  
+  const userModel = (await import("../Users/model.js")).default;
+  const users = await userModel.find({ _id: { $in: userIds } });
+  console.log("Users found:", users);
+  
+  return users;
+}
 
-  function findEnrollmentsForUser(userId) {
-    const { enrollments } = db;
-    return enrollments.filter((enrollment) => enrollment.user === userId);
-  }
+export function enrollUserInCourse(userId, courseId) {
+  return model.create({
+    user: userId,
+    course: courseId,
+    _id: `${userId}-${courseId}`,
+  });
+}
 
-  function findUsersForCourse(courseId) {
-    const { enrollments, users } = db;
-    const enrolledUserIds = enrollments
-      .filter((enrollment) => enrollment.course === courseId)
-      .map((enrollment) => enrollment.user);
-    return users.filter((user) => enrolledUserIds.includes(user._id));
-  }
+export function unenrollUserFromCourse(user, course) {
+  return model.deleteOne({ user, course });
+}
 
-  return {
-    enrollUserInCourse,
-    unenrollUserFromCourse,
-    findEnrollmentsForUser,
-    findUsersForCourse,
-  };
+export function unenrollAllUsersFromCourse(courseId) {
+  return model.deleteMany({ course: courseId });
 }
