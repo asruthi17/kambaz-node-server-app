@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const moduleSchema = new mongoose.Schema(
   {
-    _id: { type: String, required: true }, // ADD THIS LINE - explicitly set _id as String
+    _id: { type: String, required: true }, 
     name: String,
     description: String,
     course: String, 
@@ -17,7 +17,7 @@ const moduleSchema = new mongoose.Schema(
   },
   { 
     collection: "modules",
-    _id: false // ADD THIS - tells Mongoose not to auto-generate ObjectId
+    _id: false 
   }
 );
 
